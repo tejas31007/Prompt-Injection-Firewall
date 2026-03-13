@@ -1,0 +1,11 @@
+# Python Environment
+venv/
+__pycache__/
+
+# Datasets (Crucial: Do not commit large data files to GitHub)
+*.parquet
+*.csv
+*.json
+
+# Environment variables (for when we build the API later)
+.env
