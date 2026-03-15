@@ -28,23 +28,25 @@ class DatabaseLogger:
             print(f"Database connection failed: {e}")
 
     def create_table(self):
-        """Creates the logging table if it doesn't already exist."""
+        """Creates the logging table (and forces a reset to fix the VARCHAR limit)."""
         if not self.conn:
             return
             
         create_table_query = """
-        CREATE TABLE IF NOT EXISTS attack_logs (
+        DROP TABLE IF EXISTS attack_logs; -- This nukes the old broken table!
+        
+        CREATE TABLE attack_logs (
             id SERIAL PRIMARY KEY,
             timestamp TIMESTAMP NOT NULL,
             prompt TEXT NOT NULL,
-            layer_failed VARCHAR(50) NOT NULL,
+            layer_failed VARCHAR(255) NOT NULL,
             threat_score FLOAT NOT NULL
         );
         """
         try:
             with self.conn.cursor() as cursor:
                 cursor.execute(create_table_query)
-                print("Attack logs table is ready.")
+                print("Attack logs table successfully reset and ready.")
         except Exception as e:
             print(f"Error creating table: {e}")
 
